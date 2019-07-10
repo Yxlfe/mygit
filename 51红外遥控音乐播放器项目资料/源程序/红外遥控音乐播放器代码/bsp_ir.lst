@@ -1,0 +1,123 @@
+C51 COMPILER V9.00   BSP_IR                                                                02/22/2019 13:55:16 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE BSP_IR
+OBJECT MODULE PLACED IN bsp_ir.obj
+COMPILER INVOKED BY: D:\Keil4\C51\BIN\C51.EXE bsp\src\bsp_ir.c LARGE BROWSE INCDIR(.\bsp;.\app\inc;.\bsp\inc) DEBUG OBJE
+                    -CTEXTEND PRINT(.\bsp_ir.lst) OBJECT(bsp_ir.obj)
+
+line level    source
+
+   1          #include "bsp.h"
+   2          unsigned char irtime =0 ;//记录 256us 次数 
+   3          unsigned char irdata[33]={0}; //红外原始的数据-时长-没有经过译码 只是时间长度
+   4          unsigned char startflag =0 ; //表示是第一次进入中断 第二次后 值为1
+   5          unsigned char fIrRevOk =0; //代表一次接收完成
+   6          unsigned char IR_CODE[4]={0};
+   7          unsigned char IRKEY   = 0x99;
+   8          void  ISR_INT0(void) interrupt  0         
+   9          {
+  10   1         static unsigned char index =0; //static --只初始化一次 类似于全局变量
+  11   1         if(startflag ==0)
+  12   1         {
+  13   2                startflag =1 ;
+  14   2                irtime =0;
+  15   2         }
+  16   1         else //第N次 进来 
+  17   1         {
+  18   2                //判断 有没有出现引导码 --非常重要 -必须
+  19   2                if((irtime>30)&&(irtime<60))
+  20   2                {
+  21   3                       index =0;
+  22   3                }
+  23   2                irdata[index++] = irtime; //时长
+  24   2                irtime =0;
+  25   2                if(index ==33) //一次接收完成
+  26   2                {
+  27   3                      index =0 ;
+  28   3                      irtime =0;
+  29   3                      startflag =0;
+  30   3                      fIrRevOk =1;
+  31   3                }
+  32   2         }
+  33   1      }
+  34          
+  35          
+  36          void ISR_Timer0(void) interrupt  1      //T0 -65536*12/11.0592us --自动将irtime+1
+  37          {
+  38   1              irtime++;
+  39   1      }
+  40          //idrdata[1] ~irdata[32]
+  41          void bsp_IrDecode(void)
+  42          {
+  43   1               unsigned char i,j,k;
+  44   1               unsigned char value=0;
+  45   1               k=1;
+  46   1               for(i=0;i<4;i++) //4个字节
+  47   1               {
+  48   2                      for(j=0;j<8;j++)//8位
+  49   2                      {
+  50   3                         value >>= 1;
+  51   3                         if( irdata[k]>7) //变量=1
+  52   3                         {
+  53   4                                value |= 0x80;
+  54   4                         }
+C51 COMPILER V9.00   BSP_IR                                                                02/22/2019 13:55:16 PAGE 2   
+
+  55   3                         k++;
+  56   3                      }
+  57   2      
+  58   2                      IR_CODE[i] = value;
+  59   2                      value =0;
+  60   2               }
+  61   1      }
+  62          
+  63          void bsp_IrFunc(void)
+  64          {
+  65   1               if(fIrRevOk ==1)  //接收到完整的33个数据 位
+  66   1                {
+  67   2                       fIrRevOk =0;
+  68   2                       bsp_IrDecode(); //红外解码                                                                                                                                        
+  69   2                }
+  70   1                switch(IR_CODE[2])
+  71   1                {
+  72   2                      case 0x40 : IRKEY = UP ;break;
+  73   2                      case 0x19 : IRKEY = DOWN ;break;
+  74   2                      case 0x7 : IRKEY = LEFT ;break;
+  75   2                      case 0x9 : IRKEY = RIGHT ;break;
+  76   2      
+  77   2                      case 0x15 : IRKEY = SURE ;break;
+  78   2                      case 0x43 : IRKEY = CANCEL ;break;
+  79   2                      case 0x47 : IRKEY = PLAY ;break;
+  80   2                      case 0x45 : IRKEY = STOP ;break;
+  81   2                      case 0x0d : IRKEY = PAUSE ;break;
+  82   2      
+  83   2                      case 0x16 : IRKEY = ZERO ;break;
+  84   2                      case 0x0c : IRKEY = ONE ;break;
+  85   2                      case 0x18 : IRKEY = TWO ;break;
+  86   2                      case 0x5e : IRKEY = THREE ;break;
+  87   2                      case 0x8  : IRKEY = FOUR ;break;
+  88   2                      case 0x1c : IRKEY = FIVE ;break;
+  89   2                      case 0x5a : IRKEY = SIX ;break;
+  90   2                      case 0x42 : IRKEY = SEVEN ;break;
+  91   2                      case 0x52 : IRKEY = EIGHT ;break;
+  92   2                      case 0x4a : IRKEY = NINE ;break;
+  93   2      
+  94   2                      default : IRKEY = 0X99;break;
+  95   2                }
+  96   1                IR_CODE[2] =0x00;
+  97   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    432    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     42    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

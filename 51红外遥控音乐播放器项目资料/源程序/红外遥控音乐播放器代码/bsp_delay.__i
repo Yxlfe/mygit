@@ -1,0 +1,1 @@
+"bsp\src\bsp_delay.c" LARGE BROWSE INCDIR(.\bsp;.\app\inc;.\bsp\inc) DEBUG OBJECTEXTEND PRINT(.\bsp_delay.lst) OBJECT(bsp_delay.obj)

@@ -1,0 +1,12 @@
+"STARTUP.obj",
+"main.obj",
+"bsp_music.obj",
+"bsp.obj",
+"bsp_delay.obj",
+"bsp_lcd1602.obj",
+"bsp_int.obj",
+"bsp_timer.obj",
+"bsp_ir.obj",
+"bsp_serial.obj" 
+TO "sq2018" 
+RAMSIZE(256) 

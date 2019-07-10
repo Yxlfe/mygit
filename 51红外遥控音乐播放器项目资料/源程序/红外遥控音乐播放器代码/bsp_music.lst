@@ -1,0 +1,567 @@
+C51 COMPILER V9.00   BSP_MUSIC                                                             01/31/2019 15:44:39 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE BSP_MUSIC
+OBJECT MODULE PLACED IN bsp_music.obj
+COMPILER INVOKED BY: D:\Keil4\C51\BIN\C51.EXE bsp\src\bsp_music.c LARGE BROWSE INCDIR(.\bsp;.\app\inc;.\bsp\inc) DEBUG O
+                    -BJECTEXTEND PRINT(.\bsp_music.lst) OBJECT(bsp_music.obj)
+
+line level    source
+
+   1          #include "bsp.h"
+   2          
+   3          #define  SIZEOFMENU  9
+   4          unsigned char Anum[4]={0};
+   5          unsigned char Bnum[4]={0};
+   6          unsigned char Asum=0;
+   7          unsigned char Bsum=0;
+   8          unsigned char a=0;
+   9          unsigned char b=0;
+  10          unsigned char CurMenuIndex =0; //指向当前菜单编号
+  11          unsigned char FirstLine[16]=" 123";
+  12          unsigned char SecondLine[16]=" 123";
+  13          unsigned char lcdflashflag =1;//菜单刷新命令
+  14          //unsigned char IRFLAG =0;   //红外操作的健值 
+  15          
+  16          
+  17          typedef struct keymenu
+  18          {       
+  19                  unsigned char curindex;//当前的菜单编号
+  20                  unsigned char UPindex;//按下向上按键 进入的编号
+  21                  unsigned char DNindex;//按下向下按键 进入的编号
+  22                  unsigned char SUREindex;//按下回车按键 进入的编号
+  23                  unsigned char CANCELindex;//按下返回按键 进入的编号
+  24                  void (*operation)();
+  25          
+  26          } MYMENU;
+  27          
+  28          MYMENU code keytab[SIZEOFMENU] =
+  29          {
+  30                           //当前，上，下，确定，返回
+  31                           {0,0,1,2,0,dispmenu0},//模式选择界面1
+  32                           {1,0,1,3,1,dispmenu1},//模式选择界面2
+  33                           {2,2,4,5,0,dispmenu2},//播放模式选择界面1(选择特定曲目)
+  34                           {3,3,3,3,1,dispmenu3},//输入选择音量大小数字界面
+  35                           {4,2,4,6,0,dispmenu4},//播放模式选择界面2(全部循环播放)
+  36                           {5,5,5,5,2,dispmenu5},//输入选择歌曲序号数字界面
+  37                           {6,6,6,6,4,dispmenu6},//界面：Circle Playing!
+  38          };
+  39          
+  40          //根据红外按键进行 菜单切换
+  41          void switch_menu(void)
+  42          {
+  43   1              switch(IRKEY)
+  44   1              {
+  45   2                 case PLAY://播放
+  46   2                 {
+  47   3                       Music_play();
+  48   3                       IRKEY=0X99;
+  49   3                       lcdflashflag = 1;
+  50   3                       bsp_LcdClr();
+  51   3                       break;
+  52   3                 }
+  53   2      
+  54   2                 case STOP://播放上一首
+C51 COMPILER V9.00   BSP_MUSIC                                                             01/31/2019 15:44:39 PAGE 2   
+
+  55   2                 {
+  56   3                       Music_stop();
+  57   3                       IRKEY=0X99;
+  58   3                       lcdflashflag = 1;
+  59   3                       bsp_LcdClr();
+  60   3                       break;
+  61   3                 }
+  62   2      
+  63   2                 case PAUSE://暂停
+  64   2                 {
+  65   3                       Music_pause();
+  66   3                       IRKEY=0X99;
+  67   3                       lcdflashflag = 1;
+  68   3                       bsp_LcdClr();
+  69   3                       break;
+  70   3                 }
+  71   2      
+  72   2                 case LEFT://播放上一首
+  73   2                 {
+  74   3                       Last_Play();
+  75   3                       IRKEY=0X99;
+  76   3                       lcdflashflag = 1;
+  77   3                       bsp_LcdClr();
+  78   3                       break;
+  79   3                 }
+  80   2      
+  81   2                 case RIGHT://播放下一首
+  82   2                 {
+  83   3                       Next_Play();
+  84   3                       lcdflashflag = 1;
+  85   3                       bsp_LcdClr();
+  86   3                       IRKEY=0X99;
+  87   3                       break;
+  88   3                 }
+  89   2      
+  90   2                 case  UP :  //向上
+  91   2                 {
+  92   3                      CurMenuIndex = keytab[CurMenuIndex].UPindex;
+  93   3                      lcdflashflag = 1;
+  94   3                      bsp_LcdClr();
+  95   3                      IRKEY = 0x99;
+  96   3                      break;
+  97   3                 }
+  98   2      
+  99   2                 case  DOWN :
+ 100   2                 {
+ 101   3                      CurMenuIndex = keytab[CurMenuIndex].DNindex;
+ 102   3                      lcdflashflag = 1;
+ 103   3                      bsp_LcdClr();
+ 104   3                      IRKEY = 0x99;
+ 105   3                      break;
+ 106   3                 }
+ 107   2      
+ 108   2                 case  SURE :
+ 109   2                 {
+ 110   3                      if(CurMenuIndex==4)
+ 111   3                      {
+ 112   4                              Cycle_play();           
+ 113   4                      }
+ 114   3                      else
+ 115   3                              if(CurMenuIndex==5)
+ 116   3                              {
+C51 COMPILER V9.00   BSP_MUSIC                                                             01/31/2019 15:44:39 PAGE 3   
+
+ 117   4                                      Asum = Anum[0] * 10 + Anum[1];
+ 118   4                                      Specify_Musi_Play(Asum);
+ 119   4                                      a = Asum = Anum[0] = Anum[1] = Anum[2]=0;       
+ 120   4                              }
+ 121   3                              else
+ 122   3                                      if(CurMenuIndex==3)
+ 123   3                                      {
+ 124   4                                              Bsum = Bnum[0] * 10 + Bnum[1];
+ 125   4                                              Specify_Volume(Bsum);
+ 126   4                                              b = Bsum = Bnum[0] = Bnum[1] = Bnum[2] = 0;     
+ 127   4                                      }
+ 128   3                      CurMenuIndex = keytab[CurMenuIndex].SUREindex;
+ 129   3                      lcdflashflag = 1;
+ 130   3                      bsp_LcdClr();
+ 131   3                      IRKEY = 0x99;
+ 132   3                      break;
+ 133   3                 }
+ 134   2      
+ 135   2                 case  CANCEL :
+ 136   2                 {
+ 137   3                  if(CurMenuIndex==5)
+ 138   3                      {
+ 139   4                              a = Asum = Anum[0] = Anum[1] = Anum[2] = 0;     
+ 140   4                      }
+ 141   3                      else
+ 142   3                              if(CurMenuIndex==3)
+ 143   3                              {
+ 144   4                                      b = Bsum = Bnum[0] = Bnum[1] = Bnum[2] = 0;             
+ 145   4                              }
+ 146   3                      CurMenuIndex = keytab[CurMenuIndex].CANCELindex;
+ 147   3                      lcdflashflag = 1;
+ 148   3                      bsp_LcdClr();
+ 149   3                      IRKEY = 0x99;
+ 150   3                      break;
+ 151   3                 }
+ 152   2              
+ 153   2                 case ZERO://输入0
+ 154   2                 {
+ 155   3                      if(CurMenuIndex==5)
+ 156   3                      {
+ 157   4                              Anum[a++]=0;
+ 158   4                              if(a>2)
+ 159   4                              {       
+ 160   5                                      Anum[0] = Anum[1];
+ 161   5                                      Anum[1] = Anum[2];
+ 162   5                                      a=2;
+ 163   5                              }
+ 164   4                      }
+ 165   3                      else
+ 166   3                              if(CurMenuIndex==3)
+ 167   3                              {
+ 168   4                                      Bnum[b++]=0;
+ 169   4                                      if(b>2)
+ 170   4                                      {
+ 171   5                                              Bnum[0] = Bnum[1];
+ 172   5                                              Bnum[1] = Bnum[2];
+ 173   5                                              b=2;
+ 174   5                                      }
+ 175   4                              }
+ 176   3                      lcdflashflag = 1;
+ 177   3                      bsp_LcdClr();
+ 178   3                      IRKEY=0X99;
+C51 COMPILER V9.00   BSP_MUSIC                                                             01/31/2019 15:44:39 PAGE 4   
+
+ 179   3                      break;
+ 180   3                 }
+ 181   2      
+ 182   2                 case ONE://输入1
+ 183   2                 {
+ 184   3                      if(CurMenuIndex==5)
+ 185   3                      {
+ 186   4                              Anum[a++]=1;
+ 187   4                              if(a>2)
+ 188   4                              {
+ 189   5                                      Anum[0] = Anum[1];
+ 190   5                                      Anum[1] = Anum[2];
+ 191   5                                      a=2;
+ 192   5                              }
+ 193   4                      }
+ 194   3                      else
+ 195   3                              if(CurMenuIndex==3)
+ 196   3                              {
+ 197   4                                      Bnum[b++]=1;
+ 198   4                                      if(b>2)
+ 199   4                                      {
+ 200   5                                              Bnum[0] = Bnum[1];
+ 201   5                                              Bnum[1] = Bnum[2];
+ 202   5                                              b=2;
+ 203   5                                      }
+ 204   4                              }
+ 205   3                      lcdflashflag = 1;
+ 206   3                      bsp_LcdClr();
+ 207   3                      IRKEY=0X99;
+ 208   3                      break;
+ 209   3                 }
+ 210   2      
+ 211   2                 case TWO://输入2
+ 212   2                 {
+ 213   3                      if(CurMenuIndex==5)
+ 214   3                      {
+ 215   4                              Anum[a++]=2;
+ 216   4                              if(a>2)
+ 217   4                              {
+ 218   5                                      Anum[0] = Anum[1];
+ 219   5                                      Anum[1] = Anum[2];
+ 220   5                                      a=2;
+ 221   5                              }
+ 222   4                      }
+ 223   3                      else
+ 224   3                              if(CurMenuIndex==3)
+ 225   3                              {
+ 226   4                                      Bnum[b++]=2;
+ 227   4                                      if(b>2)
+ 228   4                                      {
+ 229   5                                              Bnum[0] = Bnum[1];
+ 230   5                                              Bnum[1] = Bnum[2];
+ 231   5                                              b=2;
+ 232   5                                      }
+ 233   4                              }
+ 234   3                      lcdflashflag = 1;
+ 235   3                      bsp_LcdClr();
+ 236   3                      IRKEY=0X99;
+ 237   3                      break;
+ 238   3                 }
+ 239   2      
+ 240   2                 case THREE://输入3
+C51 COMPILER V9.00   BSP_MUSIC                                                             01/31/2019 15:44:39 PAGE 5   
+
+ 241   2                 {
+ 242   3                      if(CurMenuIndex==5)
+ 243   3                      {
+ 244   4                              Anum[a++]=3;
+ 245   4                              if(a>2)
+ 246   4                              {
+ 247   5                                      Anum[0] = Anum[1];
+ 248   5                                      Anum[1] = Anum[2];
+ 249   5                                      a=2;
+ 250   5                              }
+ 251   4                      }
+ 252   3                      else
+ 253   3                              if(CurMenuIndex==3)
+ 254   3                              {
+ 255   4                                      Bnum[b++]=3;
+ 256   4                                      if(b>2)
+ 257   4                                      {
+ 258   5                                              Bnum[0] = Bnum[1];
+ 259   5                                              Bnum[1] = Bnum[2];
+ 260   5                                              b=2;
+ 261   5                                      }
+ 262   4                              }
+ 263   3                      lcdflashflag = 1;
+ 264   3                      bsp_LcdClr();
+ 265   3                      IRKEY=0X99;
+ 266   3                      break;
+ 267   3                 }
+ 268   2      
+ 269   2                 case FOUR://输入4
+ 270   2                 {
+ 271   3                      if(CurMenuIndex==5)
+ 272   3                      {
+ 273   4                              Anum[a++]=4;
+ 274   4                              if(a>2)
+ 275   4                              {
+ 276   5                                      Anum[0] = Anum[1];
+ 277   5                                      Anum[1] = Anum[2];
+ 278   5                                      a=2;
+ 279   5                              }
+ 280   4                      }
+ 281   3                      else
+ 282   3                              if(CurMenuIndex==3)
+ 283   3                              {
+ 284   4                                      Bnum[b++]=4;
+ 285   4                                      if(b>2)
+ 286   4                                      {
+ 287   5                                              Bnum[0] = Bnum[1];
+ 288   5                                              Bnum[1] = Bnum[2];
+ 289   5                                              b=2;
+ 290   5                                      }
+ 291   4                              }
+ 292   3                      lcdflashflag = 1;
+ 293   3                      bsp_LcdClr();
+ 294   3                      IRKEY=0X99;
+ 295   3                      break;
+ 296   3                 }
+ 297   2      
+ 298   2                 case FIVE://输入5
+ 299   2                 {
+ 300   3                      if(CurMenuIndex==5)
+ 301   3                      {
+ 302   4                              Anum[a++]=5;
+C51 COMPILER V9.00   BSP_MUSIC                                                             01/31/2019 15:44:39 PAGE 6   
+
+ 303   4                              if(a>2)
+ 304   4                              {
+ 305   5                                      Anum[0] = Anum[1];
+ 306   5                                      Anum[1] = Anum[2];
+ 307   5                                      a=2;
+ 308   5                              }
+ 309   4                      }
+ 310   3                      else
+ 311   3                              if(CurMenuIndex==3)
+ 312   3                              {
+ 313   4                                      Bnum[b++]=5;
+ 314   4                                      if(b>2)
+ 315   4                                      {
+ 316   5                                              Bnum[0] = Bnum[1];
+ 317   5                                              Bnum[1] = Bnum[2];
+ 318   5                                              b=2;
+ 319   5                                      }
+ 320   4                              }
+ 321   3                      lcdflashflag = 1;
+ 322   3                      bsp_LcdClr();
+ 323   3                      IRKEY=0X99;
+ 324   3                      break;
+ 325   3                 }
+ 326   2      
+ 327   2                 case SIX://输入6
+ 328   2                 {
+ 329   3                      if(CurMenuIndex==5)
+ 330   3                      {
+ 331   4                              Anum[a++]=6;
+ 332   4                              if(a>2)
+ 333   4                              {
+ 334   5                                      Anum[0] = Anum[1];
+ 335   5                                      Anum[1] = Anum[2];
+ 336   5                                      a=2;
+ 337   5                              }
+ 338   4                      }
+ 339   3                      else
+ 340   3                              if(CurMenuIndex==3)
+ 341   3                              {
+ 342   4                                      Bnum[b++]=6;
+ 343   4                                      if(b>2)
+ 344   4                                      {
+ 345   5                                              Bnum[0] = Bnum[1];
+ 346   5                                              Bnum[1] = Bnum[2];
+ 347   5                                              b=2;
+ 348   5                                      }
+ 349   4                              }
+ 350   3                      lcdflashflag = 1;
+ 351   3                      bsp_LcdClr();
+ 352   3                      IRKEY=0X99;
+ 353   3                      break;
+ 354   3                 }
+ 355   2      
+ 356   2                 case SEVEN://输入7
+ 357   2                 {
+ 358   3                      if(CurMenuIndex==5)
+ 359   3                      {
+ 360   4                              Anum[a++]=7;
+ 361   4                              if(a>2)
+ 362   4                              {
+ 363   5                                      Anum[0] = Anum[1];
+ 364   5                                      Anum[1] = Anum[2];
+C51 COMPILER V9.00   BSP_MUSIC                                                             01/31/2019 15:44:39 PAGE 7   
+
+ 365   5                                      a=2;
+ 366   5                              }
+ 367   4                      }
+ 368   3                      else
+ 369   3                              if(CurMenuIndex==3)
+ 370   3                              {
+ 371   4                                      Bnum[b++]=7;
+ 372   4                                      if(b>2)
+ 373   4                                      {
+ 374   5                                              Bnum[0] = Bnum[1];
+ 375   5                                              Bnum[1] = Bnum[2];
+ 376   5                                              b=2;
+ 377   5                                      }
+ 378   4                              }
+ 379   3                      lcdflashflag = 1;
+ 380   3                      bsp_LcdClr();
+ 381   3                      IRKEY=0X99;
+ 382   3                      break;
+ 383   3                 }
+ 384   2      
+ 385   2                 case EIGHT://输入8
+ 386   2                 {
+ 387   3                      if(CurMenuIndex==5)
+ 388   3                      {
+ 389   4                              Anum[a++]=8;
+ 390   4                              if(a>2)
+ 391   4                              {
+ 392   5                                      Anum[0] = Anum[1];
+ 393   5                                      Anum[1] = Anum[2];
+ 394   5                                      a=2;
+ 395   5                              }
+ 396   4                      }
+ 397   3                      else
+ 398   3                              if(CurMenuIndex==3)
+ 399   3                              {
+ 400   4                                      Bnum[b++]=8;
+ 401   4                                      if(b>2)
+ 402   4                                      {
+ 403   5                                              Bnum[0] = Bnum[1];
+ 404   5                                              Bnum[1] = Bnum[2];
+ 405   5                                              b=2;
+ 406   5                                      }
+ 407   4                              }
+ 408   3                      lcdflashflag = 1;
+ 409   3                      bsp_LcdClr();
+ 410   3                      IRKEY=0X99;
+ 411   3                      break;
+ 412   3                 }
+ 413   2      
+ 414   2                 case NINE://输入9
+ 415   2                 {
+ 416   3                      if(CurMenuIndex==5)
+ 417   3                      {
+ 418   4                              Anum[a++]=9;
+ 419   4                              if(a>2)
+ 420   4                              {
+ 421   5                                      Anum[0] = Anum[1];
+ 422   5                                      Anum[1] = Anum[2];
+ 423   5                                      a=2;
+ 424   5                              }
+ 425   4                      }
+ 426   3                      else
+C51 COMPILER V9.00   BSP_MUSIC                                                             01/31/2019 15:44:39 PAGE 8   
+
+ 427   3                              if(CurMenuIndex==3)
+ 428   3                              {
+ 429   4                                      Bnum[b++]=9;
+ 430   4                                      if(b>2)
+ 431   4                                      {
+ 432   5                                              Bnum[0] = Bnum[1];
+ 433   5                                              Bnum[1] = Bnum[2];
+ 434   5                                              b=2;
+ 435   5                                      }
+ 436   4                              }
+ 437   3                      lcdflashflag = 1;
+ 438   3                      bsp_LcdClr();
+ 439   3                      IRKEY=0X99;
+ 440   3                      break;
+ 441   3                 }
+ 442   2      
+ 443   2              }
+ 444   1              
+ 445   1              keytab[CurMenuIndex].operation();       
+ 446   1      }
+ 447          
+ 448          void  dispmenu0(void) //0号界面
+ 449          {
+ 450   1          strcpy(FirstLine , " PLAY MODEL ");
+ 451   1              strcpy(SecondLine ," SOUND SET ");
+ 452   1      }
+ 453          
+ 454          void  dispmenu1(void)
+ 455          {
+ 456   1          strcpy(FirstLine , " PLAY MODEL ");
+ 457   1              strcpy(SecondLine ," SOUND SET ");
+ 458   1      }
+ 459          
+ 460          void  dispmenu2(void)
+ 461          {
+ 462   1              strcpy(FirstLine , " Spe Play ");
+ 463   1              strcpy(SecondLine ," Cir Play ");
+ 464   1      }
+ 465          
+ 466          void  dispmenu3(void)
+ 467          {
+ 468   1              strcpy(FirstLine , " Input S Num: ");
+ 469   1              sprintf(SecondLine," %d%d",(unsigned int)Bnum[0],(unsigned int)Bnum[1]);
+ 470   1      }
+ 471          
+ 472          void  dispmenu4(void)
+ 473          {
+ 474   1              strcpy(FirstLine , " Spe Play ");
+ 475   1              strcpy(SecondLine ," Cir Play ");
+ 476   1      }
+ 477          
+ 478          void  dispmenu5(void)
+ 479          {
+ 480   1              strcpy(FirstLine , " Input M Num: ");
+ 481   1              sprintf(SecondLine," %d%d",(unsigned int)Anum[0],(unsigned int)Anum[1]);
+ 482   1      }
+ 483          
+ 484          void  dispmenu6(void)
+ 485          {
+ 486   1              strcpy(FirstLine , " All songs ");
+ 487   1              strcpy(SecondLine ," is  playing! ");
+ 488   1      }
+C51 COMPILER V9.00   BSP_MUSIC                                                             01/31/2019 15:44:39 PAGE 9   
+
+ 489          
+ 490          void  fresh(void)  //刷新函数
+ 491          {       
+ 492   1              if(lcdflashflag ==1)
+ 493   1              {
+ 494   2                      bsp_LCDDispStr(0,1, FirstLine);
+ 495   2                      bsp_LCDDispStr(0,2, SecondLine);
+ 496   2                      lcdflashflag =0;
+ 497   2      
+ 498   2      
+ 499   2                      switch(CurMenuIndex)
+ 500   2                      {
+ 501   3                              case 0 :
+ 502   3                              {
+ 503   4                                      setcursorlocation(15,1); //第一行加光标
+ 504   4                                      break;
+ 505   4                              }
+ 506   3      
+ 507   3                              case 1 :
+ 508   3                              {
+ 509   4                                      setcursorlocation(15,2); //第二行
+ 510   4                                      break;
+ 511   4                              }
+ 512   3                              
+ 513   3                              case 2 :
+ 514   3                              {
+ 515   4                                      setcursorlocation(15,1); //第一行
+ 516   4                                      break;
+ 517   4                              }
+ 518   3                              
+ 519   3                              case 4 :
+ 520   3                              {
+ 521   4                                      setcursorlocation(15,2); //第二行
+ 522   4                                      break;
+ 523   4                              }  
+ 524   3                      }
+ 525   2              }
+ 526   1              
+ 527   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1904    ----
+   CONSTANT SIZE    =    182    ----
+   XDATA SIZE       =     46    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
