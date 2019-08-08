@@ -1,0 +1,750 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Main_Widget</class>
+ <widget class="QWidget" name="Main_Widget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>985</width>
+    <height>769</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Main_Widget</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="image.qrc">
+    <normaloff>:/image/image-hover/music.ico</normaloff>:/image/image-hover/music.ico</iconset>
+  </property>
+  <property name="autoFillBackground">
+   <bool>true</bool>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_3">
+   <item row="3" column="0" rowspan="2" colspan="4">
+    <widget class="QStackedWidget" name="stackedWidget">
+     <widget class="QWidget" name="page">
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
+        <widget class="QListWidget" name="listWidget_history">
+         <property name="styleSheet">
+          <string notr="true">QListWidget{
+font: 75 12pt &quot;Comic Sans MS&quot;;
+background-color:transparent;
+
+}
+QListWidget::item{
+color:rgb(120,120,120);
+border:none;
+margin-top:3px;
+
+}
+QListWidget::item:hover{
+padding-left:4px;
+margin-top:3px;
+color:rgb(100,100,100);
+background-color:rgba(255,255,255,0.2);
+
+
+
+}
+QListWidget::item:selected{
+outline:none;
+margin-top:3px;
+padding-left:4px;
+background-color:rgba(255,255,255,0.5);
+color:rgb(0,0,0);
+}
+QListWidget::item:!active{
+margin-top:3px;
+border:none;
+background-color:rgba(255,255,255,0);
+color:rgb(120,120,120);
+}
+
+
+</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="page_2">
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="0">
+        <widget class="QListWidget" name="listWidget_list">
+         <property name="styleSheet">
+          <string notr="true">QListWidget{
+font: 75 12pt &quot;Comic Sans MS&quot;;
+background-color:transparent;
+
+}
+QListWidget::item{
+color:rgb(120,120,120);
+border:none;
+margin-top:3px;
+
+}
+QListWidget::item:hover{
+padding-left:4px;
+margin-top:3px;
+color:rgb(100,100,100);
+background-color:rgba(255,255,255,0.2);
+
+
+
+}
+QListWidget::item:selected{
+outline:none;
+margin-top:3px;
+padding-left:4px;
+background-color:rgba(255,255,255,0.5);
+color:rgb(0,0,0);
+}
+QListWidget::item:!active{
+margin-top:3px;
+border:none;
+background-color:rgba(255,255,255,0);
+color:rgb(120,120,120);
+}
+
+
+</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item row="5" column="5">
+    <widget class="QWidget" name="widget_2" native="true">
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <item>
+       <widget class="QPushButton" name="start">
+        <property name="styleSheet">
+         <string notr="true">QPushButton
+{
+background-repeat:no-repeat;
+background-position:center center;
+border:none;
+
+}
+
+QPushButton:hover{
+background-repeat:no-repeat;
+background-position:center center;
+
+
+}
+QPushButton:pressed{
+background-repeat:no-repeat;
+background-position:center center;
+
+}</string>
+        </property>
+        <property name="text">
+         <string>Start</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="end">
+        <property name="styleSheet">
+         <string notr="true">QPushButton
+{
+background-repeat:no-repeat;
+background-position:center center;
+border:none;
+
+}
+
+QPushButton:hover{
+background-repeat:no-repeat;
+background-position:center center;
+
+
+}
+QPushButton:pressed{
+background-repeat:no-repeat;
+background-position:center center;
+
+}</string>
+        </property>
+        <property name="text">
+         <string>End</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="model">
+        <property name="styleSheet">
+         <string notr="true">QPushButton
+{
+background-repeat:no-repeat;
+background-position:center center;
+border:none;
+
+}
+
+QPushButton:hover{
+background-repeat:no-repeat;
+background-position:center center;
+
+
+}
+QPushButton:pressed{
+background-repeat:no-repeat;
+background-position:center center;
+
+}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="sound_add">
+        <property name="styleSheet">
+         <string notr="true">QPushButton
+{
+background-image:url(:/image/image-hover/soundadd.jpg);
+background-repeat:no-repeat;
+background-position:center center;
+border:none;
+
+}
+
+QPushButton:hover{
+
+background-image:url(:/image/image-hover/soundadd.jpg);
+background-repeat:no-repeat;
+background-position:center center;
+
+
+}
+QPushButton:pressed{
+background-image: url(:/image/image-hover/soundadd.jpg);
+background-repeat:no-repeat;
+background-position:center center;
+
+}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="sound_reduce">
+        <property name="styleSheet">
+         <string notr="true">QPushButton
+{
+background-image:url(:/image/image-hover/soundreduce.jpg);
+background-repeat:no-repeat;
+background-position:center center;
+border:none;
+
+}
+
+QPushButton:hover{
+
+background-image:url(:/image/image-hover/soundreduce.jpg);
+background-repeat:no-repeat;
+background-position:center center;
+
+
+}
+QPushButton:pressed{
+background-image: url(:/image/image-hover/soundreduce.jpg);
+background-repeat:no-repeat;
+background-position:center center;
+
+}
+</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="4">
+    <spacer name="horizontalSpacer_5">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>267</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="0" rowspan="2">
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="0" column="5" colspan="2">
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>188</width>
+         <height>38</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QWidget" name="widget" native="true">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QPushButton" name="minimize">
+          <property name="styleSheet">
+           <string notr="true">QPushButton
+{
+border-radius:0px;
+	
+background-image: url(:/image/image/min.png);
+background-color: rgba(255, 255, 255,0);
+background-repeat:no-repeat;
+border:none;
+background-position:center center;
+
+}
+
+QPushButton:hover{
+
+
+
+	background-color: rgb(255, 255, 255,100);
+
+
+}
+QPushButton:pressed{
+	background-color: rgba(95, 95, 95,100);
+border-color:rgba(255,255,255,30);
+border-style:inset;
+color:rgba(0,0,0,100);
+
+}</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="maximize">
+          <property name="styleSheet">
+           <string notr="true">QPushButton
+{
+border-radius:0px;
+background-image: url(:/image/image/max.png);
+background-color: rgba(255, 255, 255,0);
+background-repeat:no-repeat;
+border:none;
+background-position:center center;
+
+}
+
+QPushButton:hover{
+
+
+
+	background-color: rgb(255, 255, 255,100);
+
+
+}
+QPushButton:pressed{
+	background-color: rgba(95, 95, 95,100);
+border-color:rgba(255,255,255,30);
+border-style:inset;
+color:rgba(0,0,0,100);
+
+}
+</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="close">
+          <property name="styleSheet">
+           <string notr="true">QPushButton
+{
+border-radius:0px;
+background-image:url(:/image/image/quit.png);
+background-color: rgba(255, 255, 255,0);
+background-repeat:no-repeat;
+border:none;
+background-position:center center;
+
+}
+QPushButton:hover{
+
+background-color: rgba(230,0,0,0.5);
+}
+QPushButton:pressed{
+background-color: rgba(95, 95, 95,100);
+border-color:rgba(255,255,255,30);
+border-style:inset;
+color:rgba(0,0,0,100);
+
+}
+</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="3" column="5" rowspan="2">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>526</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="5" column="0" colspan="4">
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QWidget" name="widget_3" native="true">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QPushButton" name="last">
+          <property name="styleSheet">
+           <string notr="true">QPushButton
+{
+background-image: url(:/image/image-hover/pre-hover.png);
+background-repeat:no-repeat;
+background-position:center center;
+border:none;
+
+}
+
+QPushButton:hover{
+
+background-image:url(:/image/image-hover/pre-hover.png);
+background-repeat:no-repeat;
+background-position:center center;
+
+
+}
+QPushButton:pressed{
+background-image: url(:/image/image-hover/pre-hover.png);
+background-repeat:no-repeat;
+background-position:center center;
+
+}</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="play">
+          <property name="styleSheet">
+           <string notr="true">QPushButton
+{
+background-repeat:no-repeat;
+background-position:center center;
+border:none;
+
+}
+
+QPushButton:hover{
+background-repeat:no-repeat;
+background-position:center center;
+
+
+}
+QPushButton:pressed{
+background-repeat:no-repeat;
+background-position:center center;
+
+}</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="next">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="autoFillBackground">
+           <bool>false</bool>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton
+{
+background-image: url(:/image/image-hover/next-hover.png);
+background-repeat:no-repeat;
+background-position:center center;
+border:none;
+
+}
+
+QPushButton:hover{
+
+background-image:url(:/image/image-hover/next-hover.png);
+background-repeat:no-repeat;
+background-position:center center;
+
+
+}
+QPushButton:pressed{
+background-image: url(:/image/image-hover/next-hover.png);
+background-repeat:no-repeat;
+background-position:center center;
+
+}</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>118</width>
+         <height>38</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QSlider" name="process">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">
+    QSlider::add-page:Horizontal
+     {     
+background-color: rgba(255, 255, 255,100);
+        height:4px;  
+     } 
+     QSlider::sub-page:Horizontal   
+    {  
+background-color: rgb(255, 255, 255);
+        height:4px;
+     }
+    QSlider::groove:Horizontal   
+    { 
+        background:transparent; 
+        height:4px;
+    }  
+    QSlider::handle:Horizontal  
+    { 
+        height:16px; 
+        width:16px; 
+	
+	border-image: url(:/image/圆形 (9).png);
+  margin: -6 0px; 
+    }
+     </string>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="4" column="6">
+    <widget class="QSlider" name="verticalSlider">
+     <property name="styleSheet">
+      <string notr="true"> QSlider 
+    {  
+        background-color: rgba(255,255,255,0.2);
+        min-width:5px; 
+        max-width:5px;
+        border:15px solid rgba(255,255,255,0.2); 
+    }
+     QSlider::add-page:vertical
+     {      
+       
+	    background-color: rgb(250, 250, 0);
+        width:4px;
+     }
+     QSlider::sub-page:vertical  
+    {
+        background-color: rgba(255,255,255,0.5); 
+        width:4px;
+     }
+    QSlider::groove:vertical 
+    {
+        background:transparent;
+        width:6px;
+    }
+    QSlider::handle:vertical 
+    {
+         height: 13px;
+        width:13px;
+ 
+ margin: -0 -4px; 
+	border-image: url(:/image/圆形 (8).png);
+     }
+</string>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="4">
+    <spacer name="horizontalSpacer_3">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>278</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="2" rowspan="2">
+    <layout class="QHBoxLayout" name="horizontalLayout_6">
+     <item>
+      <widget class="QPushButton" name="list">
+       <property name="styleSheet">
+        <string notr="true">QPushButton
+{
+background-image: url(:/image/image/list.png);
+background-repeat:no-repeat;
+background-position:center center;
+border:none;
+
+}
+
+QPushButton:hover{
+
+background-image:url(:/image/image/list.png);
+background-repeat:no-repeat;
+background-position:center center;
+
+
+}
+QPushButton:pressed{
+background-image: url(:/image/image/list.png);
+background-repeat:no-repeat;
+background-position:center center;
+
+}
+</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="history">
+       <property name="styleSheet">
+        <string notr="true">QPushButton
+{
+background-image: url(:/image/image/play-resently.png);
+background-repeat:no-repeat;
+background-position:center center;
+border:none;
+
+}
+
+QPushButton:hover{
+
+background-image: url(:/image/image/presently.png);
+background-repeat:no-repeat;
+background-position:center center;
+
+
+}
+
+QPushButton:pressed{
+background-image: url(:/image/image/play-resently.png);
+background-repeat:no-repeat;
+background-position:center center;
+
+}</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+  <zorder>verticalSlider</zorder>
+  <zorder>widget_2</zorder>
+  <zorder>stackedWidget</zorder>
+  <zorder>verticalSpacer</zorder>
+  <zorder>horizontalSpacer_5</zorder>
+  <zorder>verticalSpacer_2</zorder>
+  <zorder>horizontalSpacer_3</zorder>
+  <zorder></zorder>
+  <zorder></zorder>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="image.qrc"/>
+ </resources>
+ <connections/>
+</ui>
