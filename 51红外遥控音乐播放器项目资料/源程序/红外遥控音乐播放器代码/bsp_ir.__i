@@ -1,0 +1,1 @@
+"bsp\src\bsp_ir.c" LARGE BROWSE INCDIR(.\bsp;.\app\inc;.\bsp\inc) DEBUG OBJECTEXTEND PRINT(.\bsp_ir.lst) OBJECT(bsp_ir.obj)

@@ -1,0 +1,1 @@
+"bsp\src\bsp_music.c" LARGE BROWSE INCDIR(.\bsp;.\app\inc;.\bsp\inc) DEBUG OBJECTEXTEND PRINT(.\bsp_music.lst) OBJECT(bsp_music.obj)

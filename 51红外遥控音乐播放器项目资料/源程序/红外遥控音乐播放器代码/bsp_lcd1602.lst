@@ -1,0 +1,150 @@
+C51 COMPILER V9.00   BSP_LCD1602                                                           01/16/2019 19:41:38 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE BSP_LCD1602
+OBJECT MODULE PLACED IN bsp_lcd1602.obj
+COMPILER INVOKED BY: D:\Keil4\C51\BIN\C51.EXE bsp\src\bsp_lcd1602.c LARGE BROWSE INCDIR(.\bsp;.\app\inc;.\bsp\inc) DEBUG
+                    - OBJECTEXTEND PRINT(.\bsp_lcd1602.lst) OBJECT(bsp_lcd1602.obj)
+
+line level    source
+
+   1          #include "bsp.h"
+   2          #define LCDPORT  P0
+   3          sbit  RS = P2^4;
+   4          sbit  RW = P2^5;
+   5          sbit  EN = P2^6;
+   6          
+   7          void bsp_LCDInit(void)
+   8          {
+   9   1              //延时15mS
+  10   1              delay_ms(15);
+  11   1              //写指令38H（不检测忙信号）
+  12   1              bsp_LCDCommand(0x38);
+  13   1              //延时5mS
+  14   1              delay_ms(5);
+  15   1              //写指令38H（不检测忙信号）
+  16   1              bsp_LCDCommand(0x38);
+  17   1              //延时5mS
+  18   1              delay_ms(5);
+  19   1              //写指令38H（不检测忙信号）
+  20   1              bsp_LCDCommand(0x38);
+  21   1              //以后每次写指令、读/写数据操作均需要检测忙信号
+  22   1              delay_ms(5);
+  23   1              bsp_LCDCommand(0x38);
+  24   1              //写指令38H：显示模式设置
+  25   1              delay_ms(5);
+  26   1              bsp_LCDCommand(0x08);
+  27   1              //写指令08H：显示关闭
+  28   1              delay_ms(5);
+  29   1              bsp_LCDCommand(0x01);
+  30   1              //写指令01H：显示清屏
+  31   1              delay_ms(5);
+  32   1              bsp_LCDCommand(0x06);
+  33   1              //写指令06H：显示光标移动设置
+  34   1              delay_ms(5);
+  35   1              bsp_LCDCommand(0x0c);
+  36   1              //写指令0CH：显示开及光标设置
+  37   1      
+  38   1               
+  39   1      }
+  40          
+  41          void bsp_LCDCommand(unsigned char cmd)
+  42          {
+  43   1              delay_ms(5);
+  44   1              RS = 0;
+  45   1              RW = 0;
+  46   1              LCDPORT= cmd;
+  47   1              EN = 1;
+  48   1              _nop_();   //1us
+  49   1              EN = 0; 
+  50   1      
+  51   1      }
+  52          void bsp_LCDData(unsigned char dat)
+  53          {
+  54   1              delay_ms(5);
+C51 COMPILER V9.00   BSP_LCD1602                                                           01/16/2019 19:41:38 PAGE 2   
+
+  55   1              RS = 1;
+  56   1              RW = 0;
+  57   1              LCDPORT= dat;
+  58   1              EN = 1;
+  59   1              _nop_();
+  60   1              EN = 0; 
+  61   1      }
+  62          //x代表横坐标  16个位置 从左到右 0-15
+  63          //y 行 1-第一行  2 第二行
+  64          //
+  65          /*void bsp_LCDDispChar(unsigned char x,unsigned char y, unsigned char s)
+  66          {
+  67             if(y==1)      //第一行
+  68                    bsp_LCDCommand(0x80+x); 
+  69             else
+  70                bsp_LCDCommand(0xc0+x);
+  71             bsp_LCDData(s);         //  bsp_LCDData(0)
+  72          }*/
+  73          void bsp_LCDDispStr(unsigned char x,unsigned char y, unsigned char *s)
+  74          {
+  75   1         if(y==1)      //第一行
+  76   1                bsp_LCDCommand(0x80+x); 
+  77   1         else
+  78   1            bsp_LCDCommand(0xc0+x);
+  79   1         while(*s)
+  80   1         {
+  81   2                bsp_LCDData(*s); //地址是自动+1
+  82   2                s++; 
+  83   2         }  
+  84   1      }
+  85          
+  86          
+  87          /*void bsp_LCDFillCGRAM(void)   //把设计的字符 送到液晶屏 便于显示
+  88          {        
+  89                  unsigned char i;
+  90                   bsp_LCDCommand(0x40);//地址自动+1
+  91                   for(i=0;i<64;i++)
+  92                   {
+  93                          bsp_LCDData(mycgram[i]);
+  94                   }
+  95          }*/
+  96          
+  97          /*void bsp_LCDDispCGRAM(unsigned char x,unsigned char y, unsigned char index)
+  98          //index 就是0-7  对应自己设计的8个特殊字符
+  99          {
+ 100                  if(y==1)         //第一行
+ 101                    bsp_LCDCommand(0x80+x); 
+ 102             else
+ 103                bsp_LCDCommand(0xc0+x);
+ 104             bsp_LCDData(index);     //  bsp_LCDData(0)
+ 105          }*/
+ 106          
+ 107          void setcursorlocation(unsigned char x,unsigned char y)
+ 108          {
+ 109   1         if(y==1)      //第一行
+ 110   1                bsp_LCDCommand(0x80+x); 
+ 111   1         else
+ 112   1            bsp_LCDCommand(0xc0+x);
+ 113   1         //   bsp_LCDCommand(0x0f);
+ 114   1      
+ 115   1              bsp_LCDData(0x7f);
+ 116   1      //      bsp_LCDData('a');
+C51 COMPILER V9.00   BSP_LCD1602                                                           01/16/2019 19:41:38 PAGE 3   
+
+ 117   1      }
+ 118          
+ 119          void bsp_LcdClr(void)
+ 120          {
+ 121   1         bsp_LCDCommand(0x01);
+ 122   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    232    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       7
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
